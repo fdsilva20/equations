@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Equation Mystery Academy</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root {
+    --ink: #1a1730;
+    --parchment: #f4e9c8;
+    --parchment-dark: #e8d9a8;
+    --gold: #d4a73a;
+    --gold-bright: #f5c542;
+    --crimson: #b53333;
+    --teal: #2a8a8a;
+    --shadow: rgba(26,23,48,0.25);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: Georgia, "Palatino", serif;
+    background:
+      radial-gradient(circle at 20% 10%, rgba(212,167,58,0.15), transparent 40%),
+      radial-gradient(circle at 80% 90%, rgba(42,138,138,0.12), transparent 40%),
+      #1a1730;
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .case-file {
+    max-width: 900px;
+    margin: 0 auto;
+    background: var(--parchment);
+    border: 3px solid var(--ink);
+    border-radius: 6px;
+    box-shadow:
+      0 0 0 8px var(--gold),
+      0 0 0 11px var(--ink),
+      0 25px 60px var(--shadow);
+    padding: 40px 50px;
+    position: relative;
+    background-image:
+      repeating-linear-gradient(0deg, transparent 0 39px, rgba(26,23,48,0.04) 39px 40px);
+  }
+
+  .case-file::before {
+    content: "TOP SECRET";
+    position: absolute;
+    top: 20px;
+    right: -10px;
+    background: var(--crimson);
+    color: var(--parchment);
+    font-family: "Courier New", monospace;
+    font-weight: bold;
+    font-size: 14px;
+    letter-spacing: 3px;
+    padding: 6px 18px;
+    transform: rotate(8deg);
+    box-shadow: 0 4px 8px var(--shadow);
+  }
+
+  .header {
+    text-align: center;
+    border-bottom: 3px double var(--ink);
+    padding-bottom: 25px;
+    margin-bottom: 30px;
+  }
+
+  .header .seal {
+    font-size: 48px;
+    margin-bottom: 5px;
+  }
+
+  h1 {
+    font-family: "Georgia", serif;
+    font-size: 38px;
+    margin: 5px 0;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .subtitle {
+    font-style: italic;
+    color: var(--teal);
+    font-size: 16px;
+    margin-top: 8px;
+  }
+
+  .agent-badge {
+    display: inline-block;
+    background: var(--ink);
+    color: var(--gold-bright);
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-family: "Courier New", monospace;
+    font-size: 13px;
+    margin-top: 15px;
+    letter-spacing: 2px;
+  }
+
+  h2 {
+    font-size: 28px;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 8px;
+    margin-top: 45px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  h3 {
+    font-size: 21px;
+    color: var(--crimson);
+    margin-top: 30px;
+  }
+
+  p { line-height: 1.7; font-size: 17px; }
+
+  .case-num {
+    display: inline-block;
+    background: var(--ink);
+    color: var(--parchment);
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-family: "Courier New", monospace;
+    font-size: 14px;
+  }
+
+  .clue-box {
+    background: rgba(255, 255, 255, 0.5);
+    border-left: 6px solid var(--gold);
+    border-radius: 4px;
+    padding: 18px 22px;
+    margin: 18px 0;
+    box-shadow: 2px 4px 10px rgba(0,0,0,0.08);
+    position: relative;
+  }
+
+  .clue-box::before {
+    content: "🔍";
+    position: absolute;
+    top: -12px;
+    left: 12px;
+    background: var(--parchment);
+    padding: 0 6px;
+    font-size: 22px;
+  }
+
+  .clue-box h4 {
+    margin: 0 0 10px 0;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-size: 14px;
+  }
+
+  .equation {
+    font-family: "Courier New", monospace;
+    font-size: 22px;
+    text-align: center;
+    background: var(--ink);
+    color: var(--gold-bright);
+    padding: 15px;
+    border-radius: 6px;
+    margin: 12px 0;
+    letter-spacing: 1.5px;
+    font-weight: bold;
+  }
+
+  .equation .small {
+    font-size: 14px;
+    color: var(--parchment-dark);
+    display: block;
+    font-weight: normal;
+    margin-top: 5px;
+    letter-spacing: 0;
+    font-family: Georgia, serif;
+    font-style: italic;
+  }
+
+  .visual {
+    background: white;
+    border: 2px dashed var(--ink);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+    text-align: center;
+  }
+
+  .scales {
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    gap: 30px;
+    margin: 15px 0;
+    font-size: 32px;
+  }
+
+  .scale-side {
+    background: var(--parchment-dark);
+    border: 2px solid var(--ink);
+    border-radius: 30px 30px 8px 8px;
+    padding: 12px 20px;
+    min-width: 120px;
+    box-shadow: 0 4px 0 var(--ink);
+  }
+
+  .equals-big {
+    font-size: 36px;
+    font-weight: bold;
+    color: var(--crimson);
+  }
+
+  .step {
+    background: linear-gradient(to right, rgba(212,167,58,0.15), transparent);
+    border-radius: 4px;
+    padding: 12px 18px;
+    margin: 10px 0;
+    border-left: 3px solid var(--gold);
+  }
+
+  .step strong { color: var(--crimson); }
+
+  .reveal {
+    background: var(--ink);
+    color: var(--gold-bright);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: Georgia, serif;
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    margin: 10px 0;
+    transition: all 0.2s;
+    box-shadow: 0 4px 0 var(--gold);
+  }
+
+  .reveal:hover {
+    background: var(--crimson);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 var(--gold);
+  }
+
+  .reveal:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 var(--gold);
+  }
+
+  .answer {
+    display: none;
+    background: rgba(42,138,138,0.15);
+    border: 2px solid var(--teal);
+    border-radius: 6px;
+    padding: 15px 20px;
+    margin-top: 12px;
+    animation: appear 0.4s ease;
+  }
+
+  .answer.shown { display: block; }
+
+  @keyframes appear {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .puzzle-card {
+    background: white;
+    border: 2px solid var(--ink);
+    border-radius: 8px;
+    padding: 25px;
+    margin: 25px 0;
+    box-shadow: 6px 6px 0 var(--gold);
+    position: relative;
+  }
+
+  .puzzle-card .stamp {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    color: var(--crimson);
+    border: 3px solid var(--crimson);
+    padding: 4px 10px;
+    font-family: "Courier New", monospace;
+    font-weight: bold;
+    font-size: 11px;
+    letter-spacing: 2px;
+    border-radius: 4px;
+    transform: rotate(-5deg);
+    opacity: 0.8;
+  }
+
+  .puzzle-card h4 {
+    margin-top: 0;
+    color: var(--ink);
+    font-size: 20px;
+  }
+
+  .icon-row {
+    font-size: 28px;
+    text-align: center;
+    margin: 12px 0;
+    letter-spacing: 4px;
+  }
+
+  .input-row {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .input-row label {
+    font-weight: bold;
+    min-width: 80px;
+  }
+
+  .input-row input {
+    padding: 10px;
+    border: 2px solid var(--ink);
+    border-radius: 4px;
+    width: 80px;
+    font-size: 16px;
+    text-align: center;
+    font-family: "Courier New", monospace;
+    font-weight: bold;
+  }
+
+  .check-btn {
+    background: var(--teal);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: Georgia;
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  .check-btn:hover { background: #1f6868; }
+
+  .feedback {
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    display: none;
+  }
+
+  .feedback.show { display: block; animation: appear 0.3s; }
+  .feedback.correct { background: #d6f5d6; color: #1a6b1a; border: 2px solid #1a6b1a; }
+  .feedback.wrong { background: #ffd6d6; color: #8a2020; border: 2px solid #8a2020; }
+
+  .parabola-svg {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 50px;
+    padding-top: 25px;
+    border-top: 3px double var(--ink);
+    font-style: italic;
+    color: var(--teal);
+  }
+
+  .footer .signature {
+    font-family: "Brush Script MT", cursive;
+    font-size: 24px;
+    color: var(--ink);
+    margin-top: 10px;
+  }
+
+  .tip {
+    background: rgba(245, 197, 66, 0.25);
+    border: 2px dashed var(--gold);
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 18px 0;
+    font-size: 15px;
+  }
+
+  .tip::before {
+    content: "💡 ";
+    font-size: 20px;
+  }
+
+  table.suspects {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+    background: white;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  table.suspects th, table.suspects td {
+    padding: 10px 14px;
+    text-align: center;
+    border-bottom: 1px solid var(--parchment-dark);
+  }
+
+  table.suspects th {
+    background: var(--ink);
+    color: var(--gold-bright);
+    font-family: "Courier New", monospace;
+    letter-spacing: 1px;
+    font-size: 13px;
+  }
+
+  table.suspects td {
+    font-family: "Courier New", monospace;
+    font-size: 16px;
+  }
+
+  table.suspects tr.guilty td {
+    background: rgba(245, 197, 66, 0.4);
+    font-weight: bold;
+  }
+
+  @media (max-width: 600px) {
+    .case-file { padding: 20px; }
+    h1 { font-size: 26px; }
+    .equation { font-size: 16px; padding: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="case-file">
+
+  <div class="header">
+    <div class="seal">🕵️‍♀️</div>
+    <h1>The Equation Mystery Academy</h1>
+    <div class="subtitle">"Every unknown number leaves a trail. You just have to follow it."</div>
+    <div class="agent-badge">CLASSIFIED · AGENT IN TRAINING</div>
+  </div>
+
+  <p>Welcome, Detective. Two great mysteries lie before you: the <strong>Case of the Twin Unknowns</strong> (simultaneous equations) and the <strong>Curse of the Two-Faced Number</strong> (quadratic equations). Sharpen your pencil. The clues are waiting.</p>
+
+  <!-- ============ PART 1: SIMULTANEOUS ============ -->
+  <h2><span>📜</span> Case File 1 — The Twin Unknowns</h2>
+  <p><span class="case-num">CASE #001</span> &nbsp; <em>Two missing numbers. Two clues. Find them both.</em></p>
+
+  <h3>The Big Idea</h3>
+  <p>A <strong>simultaneous equation</strong> is when you have <em>two</em> mystery numbers (let's call them <strong>x</strong> and <strong>y</strong>) and <em>two</em> different clues about them. One clue alone isn't enough — but together, the two clues lock down the answer like a pair of fingerprints.</p>
+
+  <div class="clue-box">
+    <h4>The Detective's Rule</h4>
+    Two unknowns? You need two clues.<br>
+    Three unknowns? You'd need three clues. And so on!
+  </div>
+
+  <h3>Visual: The Balanced Scales</h3>
+  <p>Picture each equation as an old-fashioned set of scales. Whatever's on the left equals whatever's on the right — they're <strong>balanced</strong>.</p>
+
+  <div class="visual">
+    <div class="scales">
+      <div class="scale-side">🍎🍎 + 🍌</div>
+      <span class="equals-big">=</span>
+      <div class="scale-side">£7</div>
+    </div>
+    <div class="scales">
+      <div class="scale-side">🍎 + 🍌🍌</div>
+      <span class="equals-big">=</span>
+      <div class="scale-side">£8</div>
+    </div>
+    <p style="margin-top:15px;"><em>Two apples and a banana cost £7. One apple and two bananas cost £8. What's the price of each?</em></p>
+  </div>
+
+  <h3>Method 1 — The "Line Up the Suspects" Method (Elimination)</h3>
+  <p>Sometimes you can <strong>cancel out</strong> one of the unknowns by adding or subtracting the two equations. It's like ruling out a suspect.</p>
+
+  <div class="equation">
+    2x + y = 7 &nbsp;&nbsp;<span style="color:var(--parchment-dark)">← Clue A</span><br>
+    &nbsp;x + 2y = 8 &nbsp;&nbsp;<span style="color:var(--parchment-dark)">← Clue B</span>
+    <span class="small">x = price of one apple, y = price of one banana</span>
+  </div>
+
+  <div class="step"><strong>Step 1.</strong> Multiply Clue B by 2 so the <em>x</em>'s match: &nbsp; <code>2x + 4y = 16</code></div>
+  <div class="step"><strong>Step 2.</strong> Subtract Clue A from this new equation: &nbsp; <code>(2x + 4y) − (2x + y) = 16 − 7</code></div>
+  <div class="step"><strong>Step 3.</strong> The <em>x</em>'s cancel! &nbsp; <code>3y = 9</code> &nbsp; → &nbsp; <code>y = 3</code></div>
+  <div class="step"><strong>Step 4.</strong> Put y back into Clue A: &nbsp; <code>2x + 3 = 7</code> &nbsp; → &nbsp; <code>x = 2</code></div>
+
+  <button class="reveal" onclick="toggleAnswer(this)">🔓 Reveal the Solution</button>
+  <div class="answer">
+    <strong>Apple = £2, Banana = £3.</strong> Check: 2(£2) + £3 = £7 ✓ &nbsp; £2 + 2(£3) = £8 ✓<br>
+    Case closed!
+  </div>
+
+  <h3>Method 2 — The "Disguise" Method (Substitution)</h3>
+  <p>Rearrange one clue to say "x equals…" and then sneak that disguise into the other clue.</p>
+
+  <div class="equation">
+    y = x + 1 &nbsp;&nbsp;<span style="color:var(--parchment-dark)">← Clue A (already disguised)</span><br>
+    2x + y = 10 &nbsp;&nbsp;<span style="color:var(--parchment-dark)">← Clue B</span>
+  </div>
+
+  <div class="step"><strong>Step 1.</strong> Replace y in Clue B with (x + 1): &nbsp; <code>2x + (x + 1) = 10</code></div>
+  <div class="step"><strong>Step 2.</strong> Tidy up: &nbsp; <code>3x + 1 = 10</code> &nbsp; → &nbsp; <code>3x = 9</code> &nbsp; → &nbsp; <code>x = 3</code></div>
+  <div class="step"><strong>Step 3.</strong> Put x = 3 back in Clue A: &nbsp; <code>y = 3 + 1 = 4</code></div>
+
+  <button class="reveal" onclick="toggleAnswer(this)">🔓 Reveal the Solution</button>
+  <div class="answer"><strong>x = 3, y = 4.</strong> Two unknowns, two clues, two answers. The trail led right to them.</div>
+
+  <h3>🗺️ Mystery Puzzle: The Pirate's Treasure Chest</h3>
+  <div class="puzzle-card">
+    <div class="stamp">EVIDENCE</div>
+    <h4>Captain Blackbeak's Loot</h4>
+    <p>You've cracked into the captain's logbook. It says:</p>
+    <div class="icon-row">🗝️🗝️🗝️ + 💎💎 = 19 doubloons</div>
+    <div class="icon-row">🗝️ + 💎💎💎 = 18 doubloons</div>
+    <p>Each <strong>🗝️ key</strong> is worth the same. Each <strong>💎 gem</strong> is worth the same. Find the value of each!</p>
+
+    <div class="input-row">
+      <label>🗝️ Key =</label>
+      <input type="number" id="p1key" placeholder="?">
+      <label>💎 Gem =</label>
+      <input type="number" id="p1gem" placeholder="?">
+      <button class="check-btn" onclick="checkPuzzle1()">🔍 Check Answer</button>
+    </div>
+    <div id="p1feedback" class="feedback"></div>
+
+    <button class="reveal" onclick="toggleAnswer(this)" style="margin-top:15px;">💡 Need a Hint?</button>
+    <div class="answer">
+      Let k = key, g = gem. Then: <code>3k + 2g = 19</code> &nbsp; and &nbsp; <code>k + 3g = 18</code>.<br>
+      Multiply the second by 3: <code>3k + 9g = 54</code>. Subtract the first: <code>7g = 35</code>, so <code>g = 5</code>. Then <code>k = 18 − 15 = 3</code>.<br>
+      <strong>Key = 3 doubloons, Gem = 5 doubloons.</strong>
+    </div>
+  </div>
+
+  <h3>🐉 Mystery Puzzle: The Dragon's Riddle</h3>
+  <div class="puzzle-card">
+    <div class="stamp">CLUE #2</div>
+    <h4>The Cave of Two Numbers</h4>
+    <p>A dragon blocks your path. He growls:</p>
+    <p style="font-style:italic; text-align:center; padding: 0 20px;">"I am thinking of two numbers. Their <strong>sum is 14</strong>. Their <strong>difference is 4</strong>. Tell me both, and you may pass."</p>
+
+    <div class="input-row">
+      <label>Bigger #:</label>
+      <input type="number" id="p2big" placeholder="?">
+      <label>Smaller #:</label>
+      <input type="number" id="p2small" placeholder="?">
+      <button class="check-btn" onclick="checkPuzzle2()">🐉 Answer the Dragon</button>
+    </div>
+    <div id="p2feedback" class="feedback"></div>
+
+    <button class="reveal" onclick="toggleAnswer(this)" style="margin-top:15px;">💡 Reveal Strategy</button>
+    <div class="answer">
+      Let the numbers be x and y. <code>x + y = 14</code>, <code>x − y = 4</code>.<br>
+      Add the two equations: <code>2x = 18</code> → <code>x = 9</code>. Then <code>y = 14 − 9 = 5</code>.<br>
+      <strong>The numbers are 9 and 5.</strong> The dragon steps aside.
+    </div>
+  </div>
+
+  <!-- ============ PART 2: QUADRATIC ============ -->
+  <h2><span>🌀</span> Case File 2 — The Two-Faced Number</h2>
+  <p><span class="case-num">CASE #002</span> &nbsp; <em>One mystery number… that may have two identities.</em></p>
+
+  <h3>The Big Idea</h3>
+  <p>A <strong>quadratic equation</strong> is one that contains a squared mystery number, like <strong>x²</strong>. The shocking twist? These equations often have <em>two</em> correct answers — like a suspect with a twin!</p>
+
+  <div class="equation">
+    x² − 5x + 6 = 0
+    <span class="small">The classic shape: ax² + bx + c = 0</span>
+  </div>
+
+  <h3>Visual: The Smile (and the Frown)</h3>
+  <p>If you draw a quadratic on a graph, it makes a U-shape called a <strong>parabola</strong>. The places it crosses the x-axis are the answers — and there can be two!</p>
+
+  <div class="visual">
+    <svg class="parabola-svg" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+      <!-- grid -->
+      <g stroke="#d4a73a" stroke-width="0.5" opacity="0.4">
+        <line x1="0" y1="40" x2="400" y2="40"/>
+        <line x1="0" y1="80" x2="400" y2="80"/>
+        <line x1="0" y1="120" x2="400" y2="120"/>
+        <line x1="0" y1="160" x2="400" y2="160"/>
+        <line x1="0" y1="200" x2="400" y2="200"/>
+        <line x1="50" y1="0" x2="50" y2="260"/>
+        <line x1="100" y1="0" x2="100" y2="260"/>
+        <line x1="150" y1="0" x2="150" y2="260"/>
+        <line x1="250" y1="0" x2="250" y2="260"/>
+        <line x1="300" y1="0" x2="300" y2="260"/>
+        <line x1="350" y1="0" x2="350" y2="260"/>
+      </g>
+      <!-- axes -->
+      <line x1="0" y1="200" x2="400" y2="200" stroke="#1a1730" stroke-width="2"/>
+      <line x1="200" y1="0" x2="200" y2="260" stroke="#1a1730" stroke-width="2"/>
+      <text x="385" y="218" font-family="Courier New" font-size="14" fill="#1a1730">x</text>
+      <text x="208" y="14" font-family="Courier New" font-size="14" fill="#1a1730">y</text>
+      <!-- parabola: y = (x-3)(x-1) shifted to fit -->
+      <path d="M 60 50 Q 200 380 340 50" stroke="#b53333" stroke-width="3" fill="none"/>
+      <!-- roots -->
+      <circle cx="150" cy="200" r="7" fill="#d4a73a" stroke="#1a1730" stroke-width="2"/>
+      <circle cx="250" cy="200" r="7" fill="#d4a73a" stroke="#1a1730" stroke-width="2"/>
+      <text x="135" y="225" font-family="Courier New" font-size="13" fill="#1a1730" font-weight="bold">x = 1</text>
+      <text x="235" y="225" font-family="Courier New" font-size="13" fill="#1a1730" font-weight="bold">x = 3</text>
+      <text x="100" y="240" font-family="Georgia" font-size="11" fill="#2a8a8a" font-style="italic">← suspect 1</text>
+      <text x="240" y="240" font-family="Georgia" font-size="11" fill="#2a8a8a" font-style="italic">suspect 2 →</text>
+    </svg>
+    <p style="margin-top:10px;"><em>Two crossings = two answers. Both are right!</em></p>
+  </div>
+
+  <h3>Method: Factorising (a.k.a. "Splitting the Suspects")</h3>
+  <p>The trick is to rewrite x² + bx + c as <strong>(x + ?)(x + ?)</strong>. You're looking for two numbers that <strong>multiply to give c</strong> and <strong>add to give b</strong>.</p>
+
+  <div class="equation">
+    x² − 5x + 6 = 0
+    <span class="small">Need two numbers: multiply to +6, add to −5</span>
+  </div>
+
+  <h3>The Suspect Line-Up</h3>
+  <p>List pairs of numbers that multiply to +6, then check which pair adds to −5:</p>
+
+  <table class="suspects">
+    <tr><th>Suspect Pair</th><th>Multiply</th><th>Add</th><th>Verdict</th></tr>
+    <tr><td>1 and 6</td><td>6 ✓</td><td>7</td><td>❌</td></tr>
+    <tr><td>2 and 3</td><td>6 ✓</td><td>5</td><td>❌</td></tr>
+    <tr><td>−1 and −6</td><td>6 ✓</td><td>−7</td><td>❌</td></tr>
+    <tr class="guilty"><td>−2 and −3</td><td>6 ✓</td><td>−5</td><td>✅ GUILTY</td></tr>
+  </table>
+
+  <div class="step"><strong>So:</strong> &nbsp; <code>x² − 5x + 6 = (x − 2)(x − 3) = 0</code></div>
+  <div class="step"><strong>The Big Idea:</strong> If two things multiply to give zero, one of them <em>must</em> be zero. So either <code>x − 2 = 0</code> (giving x = 2) <em>or</em> <code>x − 3 = 0</code> (giving x = 3).</div>
+
+  <button class="reveal" onclick="toggleAnswer(this)">🔓 Reveal the Twins</button>
+  <div class="answer"><strong>x = 2 OR x = 3.</strong> Both fit! Try them: (2)² − 5(2) + 6 = 0 ✓ and (3)² − 5(3) + 6 = 0 ✓</div>
+
+  <div class="tip">
+    <strong>The Detective's Trick:</strong> Look at the signs. If <em>c</em> is positive and <em>b</em> is negative, both your suspects are negative. If <em>c</em> is negative, one suspect is positive and one is negative.
+  </div>
+
+  <h3>🏰 Mystery Puzzle: The Garden of Secrets</h3>
+  <div class="puzzle-card">
+    <div class="stamp">CASE FILE</div>
+    <h4>The Lady's Rectangular Garden</h4>
+    <p>An old letter says the lady's secret garden has an <strong>area of 12 square metres</strong>. The length is <strong>1 metre longer than the width</strong>. What are the dimensions?</p>
+
+    <div class="clue-box" style="margin-top:15px;">
+      <h4>Setting It Up</h4>
+      Let width = x. Then length = x + 1.<br>
+      Area = length × width = <code>x(x + 1) = 12</code><br>
+      Expand: <code>x² + x − 12 = 0</code>
+    </div>
+
+    <p>Find two numbers that multiply to −12 and add to +1.</p>
+
+    <div class="input-row">
+      <label>Width (m):</label>
+      <input type="number" id="p3width" placeholder="?">
+      <label>Length (m):</label>
+      <input type="number" id="p3length" placeholder="?">
+      <button class="check-btn" onclick="checkPuzzle3()">🌹 Inspect Garden</button>
+    </div>
+    <div id="p3feedback" class="feedback"></div>
+
+    <button class="reveal" onclick="toggleAnswer(this)" style="margin-top:15px;">💡 Reveal the Garden</button>
+    <div class="answer">
+      The pair is <strong>+4 and −3</strong> (multiply: −12 ✓, add: +1 ✓).<br>
+      So <code>(x + 4)(x − 3) = 0</code> → x = −4 or x = 3.<br>
+      A garden can't have negative width, so <strong>width = 3 m, length = 4 m.</strong> Quadratics often give two answers, but <em>real life</em> sometimes only allows one of them — that's part of the mystery!
+    </div>
+  </div>
+
+  <h3>🦇 Mystery Puzzle: The Bat Cave</h3>
+  <div class="puzzle-card">
+    <div class="stamp">URGENT</div>
+    <h4>The Echoing Equation</h4>
+    <p>Carved on the cave wall in glowing letters:</p>
+    <div class="equation" style="margin: 15px 0;">x² − 7x + 10 = 0</div>
+    <p>The cave only opens when you whisper <strong>both</strong> values of x.</p>
+
+    <div class="input-row">
+      <label>x = </label>
+      <input type="number" id="p4a" placeholder="?">
+      <label>or x =</label>
+      <input type="number" id="p4b" placeholder="?">
+      <button class="check-btn" onclick="checkPuzzle4()">🦇 Whisper</button>
+    </div>
+    <div id="p4feedback" class="feedback"></div>
+
+    <button class="reveal" onclick="toggleAnswer(this)" style="margin-top:15px;">💡 Reveal the Twins</button>
+    <div class="answer">
+      Two numbers that multiply to +10 and add to −7? <strong>−2 and −5.</strong><br>
+      So <code>(x − 2)(x − 5) = 0</code> → <strong>x = 2 or x = 5.</strong> The cave creaks open!
+    </div>
+  </div>
+
+  <!-- ============ FINAL ============ -->
+  <h2><span>🎓</span> Detective's Cheat Sheet</h2>
+
+  <div class="clue-box">
+    <h4>Simultaneous Equations</h4>
+    <strong>What it is:</strong> Two unknowns, two clues. Both must be true at the same time.<br>
+    <strong>Best moves:</strong>
+    <ul>
+      <li><strong>Elimination:</strong> add or subtract the equations to make one variable disappear.</li>
+      <li><strong>Substitution:</strong> rearrange one equation to "x = …" and slot it into the other.</li>
+    </ul>
+  </div>
+
+  <div class="clue-box">
+    <h4>Quadratic Equations</h4>
+    <strong>What it is:</strong> Has an x² in it. Often has two answers.<br>
+    <strong>Best move (for now):</strong> <strong>Factorise.</strong> Find two numbers that multiply to <em>c</em> and add to <em>b</em>. Then each bracket = 0 gives an answer.
+  </div>
+
+  <div class="tip">
+    <strong>Always check your answer!</strong> Plug it back into the original equation. If it works, you cracked the case. If not, the trail's gone cold — go back and look for the slip.
+  </div>
+
+  <div class="footer">
+    <p>"The numbers were always there. You just had to ask the right questions."</p>
+    <div class="signature">— Chief Detective</div>
+    <div class="agent-badge" style="margin-top:15px;">CASE CLOSED · WELL DONE, AGENT</div>
+  </div>
+
+</div>
+
+<script>
+  function toggleAnswer(btn) {
+    const ans = btn.nextElementSibling;
+    if (ans.classList.contains('shown')) {
+      ans.classList.remove('shown');
+      btn.innerHTML = btn.innerHTML.replace('🔒 Hide', '🔓 Reveal').replace('💡 Hide', '💡 Need');
+    } else {
+      ans.classList.add('shown');
+      // change wording lightly
+      if (btn.innerHTML.includes('Reveal')) btn.innerHTML = btn.innerHTML.replace('🔓 Reveal', '🔒 Hide');
+    }
+  }
+
+  function showFeedback(id, ok, msg) {
+    const el = document.getElementById(id);
+    el.className = 'feedback show ' + (ok ? 'correct' : 'wrong');
+    el.textContent = msg;
+  }
+
+  function checkPuzzle1() {
+    const k = parseInt(document.getElementById('p1key').value);
+    const g = parseInt(document.getElementById('p1gem').value);
+    if (k === 3 && g === 5) {
+      showFeedback('p1feedback', true, "🎉 Treasure unlocked! Key = 3, Gem = 5.");
+    } else {
+      showFeedback('p1feedback', false, "Not quite — try setting up: 3k + 2g = 19 and k + 3g = 18.");
+    }
+  }
+
+  function checkPuzzle2() {
+    const big = parseInt(document.getElementById('p2big').value);
+    const small = parseInt(document.getElementById('p2small').value);
+    if (big === 9 && small === 5) {
+      showFeedback('p2feedback', true, "🐉 The dragon nods. The path is yours.");
+    } else if (big === 5 && small === 9) {
+      showFeedback('p2feedback', false, "Almost! Make sure the bigger number is in the 'Bigger' box.");
+    } else {
+      showFeedback('p2feedback', false, "Try adding: x + y = 14 and x − y = 4. Adding them gives 2x = 18.");
+    }
+  }
+
+  function checkPuzzle3() {
+    const w = parseInt(document.getElementById('p3width').value);
+    const l = parseInt(document.getElementById('p3length').value);
+    if (w === 3 && l === 4) {
+      showFeedback('p3feedback', true, "🌹 Beautiful! Width 3 m × Length 4 m = 12 m². Garden secret revealed.");
+    } else {
+      showFeedback('p3feedback', false, "Hmm — remember length is 1 more than width, and area = 12.");
+    }
+  }
+
+  function checkPuzzle4() {
+    const a = parseInt(document.getElementById('p4a').value);
+    const b = parseInt(document.getElementById('p4b').value);
+    const set = [a, b].sort((x,y)=>x-y).join(',');
+    if (set === '2,5') {
+      showFeedback('p4feedback', true, "🦇 The cave opens with a low rumble. x = 2 and x = 5 — both correct!");
+    } else {
+      showFeedback('p4feedback', false, "The bats stir. Find two numbers multiplying to +10 and adding to −7.");
+    }
+  }
+</script>
+
+</body>
+</html>
